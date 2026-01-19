@@ -16,6 +16,13 @@ svg-vae-pytorch/
 │   ├── __init__.py
 │   ├── vae_loss.py       # VAE reconstruction + KL loss
 │   └── svg_loss.py       # SVG command + MDN loss
+├── data/
+│   ├── __init__.py
+│   ├── font_downloader.py  # Google Fonts downloader
+│   ├── font_processor.py   # TTF to image/SVG processor
+│   ├── svg_tokenizer.py    # SVG path tokenizer
+│   └── dataset.py          # PyTorch Dataset
+├── prepare_data.py       # Data preparation script
 ├── train.py              # Training script
 ├── example.py            # Usage example
 ├── requirements.txt
@@ -26,6 +33,56 @@ svg-vae-pytorch/
 
 ```bash
 pip install -r requirements.txt
+```
+
+## Data Preparation
+
+### Step 1: Download fonts from Google Fonts
+
+```bash
+python prepare_data.py --download --fonts-dir ./fonts --num-fonts 10
+```
+
+### Step 2: Process fonts and create dataset
+
+```bash
+python prepare_data.py --fonts-dir ./fonts --output ./processed_data.pkl --test
+```
+
+### Using your own fonts
+
+Copy TTF files to `./fonts` directory, then run:
+
+```bash
+python prepare_data.py --fonts-dir ./fonts --output ./processed_data.pkl
+```
+
+## Training
+
+### With processed data
+
+```bash
+python train.py --data ./processed_data.pkl --epochs 100 --batch-size 32
+```
+
+### With dummy data (for testing)
+
+```bash
+python train.py --epochs 10
+```
+
+### Training options
+
+```
+--data          Path to processed data file (.pkl)
+--batch-size    Batch size (default: 32)
+--epochs        Number of epochs (default: 100)
+--lr            Learning rate (default: 1e-4)
+--latent-dim    Latent dimension (default: 64)
+--kl-weight     KL divergence weight (default: 4.68)
+--seq-len       Max SVG sequence length (default: 50)
+--save-path     Model save path (default: svgvae_model.pth)
+--save-every    Save checkpoint every N epochs (default: 10)
 ```
 
 ## Quick Start
@@ -71,12 +128,6 @@ recon_img, cmd_logits, pi_logits, mu_args, log_sigma, mu, logvar = model(
 
 - **VAE Loss**: MSE reconstruction + KL divergence (weight: 4.68)
 - **SVG Loss**: Cross-entropy for commands + MDN negative log-likelihood for coordinates
-
-## Training
-
-```bash
-python train.py
-```
 
 ## License
 

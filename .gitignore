@@ -73,9 +73,10 @@ venv.bak/
 *.pt
 checkpoints/
 
-# Data
-data/
+# Data (raw data files, not the data/ module)
 datasets/
+fonts/
+*.pkl
 
 # Logs
 logs/
