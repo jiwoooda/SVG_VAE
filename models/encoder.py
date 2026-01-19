@@ -18,9 +18,9 @@ class ImageEncoder(nn.Module):
         self.conv5 = nn.Conv2d(64, 64, 4, 2)  # 24x24 -> 11x11
         self.conv6 = nn.Conv2d(64, 64, 4, 2)  # 11x11 -> 4x4
 
-        # Latent space projection
-        self.fc_mu = nn.Linear(64, latent_dim)
-        self.fc_logvar = nn.Linear(64, latent_dim)
+        # Latent space projection (64 channels * 4 * 4 = 1024)
+        self.fc_mu = nn.Linear(64 * 4 * 4, latent_dim)
+        self.fc_logvar = nn.Linear(64 * 4 * 4, latent_dim)
 
     def forward(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
         """
